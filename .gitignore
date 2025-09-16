@@ -1,0 +1,30 @@
+# macOS
+.DS_Store
+
+# Node (frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+
+# Laravel/PHP (backend)
+backend/vendor/
+backend/.env
+backend/.env.*
+backend/storage/
+backend/public/storage
+backend/.phpunit.cache
+backend/bootstrap/cache/*.php
+
+# Local DB
+backend/database/*.sqlite
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE/editor
+.vscode/
+.idea/
