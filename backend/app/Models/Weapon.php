@@ -16,6 +16,9 @@ class Weapon extends Model
         'bonus',
         'weight',
         'durability',
+        'image',
+        'enchantable',
+        'special',
     ];
 
     protected $casts = [
@@ -23,5 +26,7 @@ class Weapon extends Model
         'damage' => 'array',
         'damage_reduction' => 'array',
         'bonus' => 'array',
+        'image' => 'string',
+        'upgrade_paths' => 'array',
     ];
 }

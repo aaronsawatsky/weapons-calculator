@@ -20,6 +20,10 @@ return new class extends Migration
             $table->float('weight');
             $table->integer('durability');
             $table->timestamps();
+            $table->string('image')->nullable();
+            $table->boolean('enchantable')->default(true);
+            $table->boolean('special')->default(false);
+            $table->json('upgrade_paths')->nullable();
         });
     }
 
