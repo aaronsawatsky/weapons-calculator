@@ -1,1 +1,40 @@
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Optimus Princeps';
+  src: url('@/assets/OptimusPrinceps.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Optimus Princeps';
+  src: url('@/assets/OptimusPrincepsSemiBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  background-color: #1c1c1c;
+  font-family: 'Optimus Princeps', ui-sans-serif, system-ui, sans-serif;
+  color: white;
+}
+
+@layer base {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    margin: 0;
+    appearance: none;
+  }
+
+  input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+}

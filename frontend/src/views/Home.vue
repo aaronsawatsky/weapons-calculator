@@ -1,20 +1,32 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
+import { useWeapon } from '@/composables/weapon'
+import WeaponsGrid from '@/components/common/WeaponsGrid.vue'
+import PaginationButtons from '@/components/common/PaginationButtons.vue'
 
-const URL = import.meta.env.VITE_API_BASE_URL
+const { weaponsListReponse, weaponsListResponseState, fetchWeaponsList } = useWeapon()
 
-const weapons = ref([])
-
-const fetchWeapons = async () => {
-  const response = await window.fetch(`${URL}/weapons`)
-  const data = await response.json()
-  console.log(data)
-  weapons.value = data
+const handleSkipToPage = async (page: number | null) => {
+  if (page) await fetchWeaponsList(page)
 }
 
-onMounted(() => {
-  fetchWeapons()
+onMounted(async () => {
+  await fetchWeaponsList()
 })
 </script>
 
-<template></template>
+<template>
+  <div class="p-10 mx-auto max-w-[1000px] flex flex-col gap-4 w-full">
+    <weapons-grid
+      :weapons="weaponsListReponse.data"
+      :is-loading="weaponsListResponseState.is_loading"
+    />
+    <pagination-buttons
+      :current_page="weaponsListReponse.meta.current_page"
+      :has_next_page="weaponsListReponse.meta.has_next_page"
+      :has_prev_page="weaponsListReponse.meta.has_prev_page"
+      :total_pages="weaponsListReponse.meta.total_pages"
+      @click:skip-to-page="handleSkipToPage"
+    />
+  </div>
+</template>
