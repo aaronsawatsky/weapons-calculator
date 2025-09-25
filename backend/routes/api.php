@@ -5,3 +5,4 @@ use App\Http\Controllers\WeaponController;
 
 Route::get('/weapons', [WeaponController::class, 'index']);
 Route::get('/weapons/{id}', [WeaponController::class, 'show']);
+Route::get('/categories', [WeaponController::class, 'categories']);

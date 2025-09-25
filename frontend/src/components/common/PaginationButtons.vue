@@ -106,8 +106,8 @@ const paginationButtons = computed<PaginationItem[]>(() => {
         <button
           v-else
           type="button"
-          class="text-sm p-2 leading-none flex rounded-sm size-full items-center justify-center max-h-6 max-w-6 cursor-pointer"
-          :class="item === current_page ? 'text-black bg-white' : 'hover:bg-white/20'"
+          class="text p-2 leading-none flex rounded-sm size-full items-center justify-center max-h-6 max-w-6 cursor-pointer"
+          :class="item === current_page ? ' bg-accent' : 'hover:bg-accent/20'"
           @click="handleSkipToPage(item)"
         >
           {{ item }}
@@ -128,7 +128,7 @@ const paginationButtons = computed<PaginationItem[]>(() => {
       <input
         type="number"
         v-model="skipToPageValue"
-        class="border py-1 px-2 leading-none text-xs focus:outline-none max-w-10 appearance-none"
+        class="border border-border-base rounded py-1 px-2 leading-none text-xs focus:outline-none max-w-10 appearance-none"
       />
       <span>of</span>
       <span class="font-bold underline">{{ total_pages }}</span>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Weapon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class WeaponController extends Controller
 {
@@ -12,12 +13,18 @@ class WeaponController extends Controller
         
         $query = Weapon::query();
 
-        if ($weaponType = $request->string('weapon_type')->toString()) {
-            $query->where('weapon_type', $weaponType);
+        $weaponTypes = array_filter(Arr::wrap($request->input('weapon_type')));
+        if (!empty($weaponTypes)) {
+            $query->whereIn('weapon_type', $weaponTypes);
         }
-
-        if ($attackType = $request->string('attack_type')->toString()) {
-            $query->where('attack_type', 'like', '%' . $attackType . '%');
+        
+        $attackTypes = array_filter(Arr::wrap($request->input('attack_type')));
+        if (!empty($attackTypes)) {
+            $query->where(function ($q) use ($attackTypes) {
+                foreach ($attackTypes as $attackType) {
+                    $q->orWhere('attack_type', 'like', '%' . $attackType . '%');
+                }
+            });
         }
 
         $weapons = $query->paginate($request->integer('per_page', 12));
@@ -38,5 +45,13 @@ class WeaponController extends Controller
     public function show($id)
     {
         return Weapon::findOrFail($id);
+    }
+
+    public function categories()
+    {
+        return response()->json([
+            'weapon_types' => Weapon::query()->distinct()->pluck('weapon_type')->sort()->values(),
+            'attack_types' => Weapon::query()->distinct()->pluck('attack_type')->sort()->values(),
+        ]);
     }
 }

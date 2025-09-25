@@ -3,17 +3,14 @@ import type { Weapon } from '@/types/types'
 
 interface Props {
   weapon: Weapon
-  isLoading: boolean
 }
 
 defineProps<Props>()
 </script>
 
 <template>
-  <div v-if="isLoading" class="border p-4 rounded border-white"></div>
   <button
-    v-else
-    class="border p-4 rounded border-white flex flex-col gap-4 hover:bg-white/10 cursor-pointer"
+    class="bg-secondaryBg hover:bg-secondaryBg/70 p-4 rounded flex flex-col gap-4 cursor-pointer shadow border border-border-base transition-all duration-300 ease-in-out"
   >
     <div class="flex flex-col gap-2">
       <p class="text-left leading-none text-2xl font-bold truncate">{{ weapon.name }}</p>
@@ -27,7 +24,11 @@ defineProps<Props>()
       <div class="size-fit mx-auto md:mr-auto md:ml-0">
         <img :src="weapon.image" class="object-cover" />
       </div>
-      <div></div>
+      <div>
+        <div v-for="requirement in Object.keys(weapon.requirements)">
+          {{ requirement }}
+        </div>
+      </div>
     </div>
   </button>
 </template>

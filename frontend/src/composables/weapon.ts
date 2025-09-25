@@ -1,8 +1,23 @@
 import { ref } from 'vue'
-import type { WeaponsListResponse, FetchState, WeaponFilteringConditions } from '@/types/types'
+import type {
+  WeaponsListResponse,
+  FetchState,
+  WeaponsFetchRequest,
+  WeaponCategories,
+} from '@/types/types'
 import { BASE_URL } from '@/const/url/url'
 
 export function useWeapon() {
+  // ===========================
+  // Fetch weapons List
+  // ===========================
+  const weaponsFetchRequestPayload = ref<WeaponsFetchRequest>({
+    page: 1,
+    per_page: 12,
+    weapon_type: [],
+    attack_type: [],
+  })
+
   const weaponsListReponse = ref<WeaponsListResponse>({
     data: [],
     meta: {
@@ -30,18 +45,26 @@ export function useWeapon() {
   }
 
   const fetchWeaponsList = async (
-    page: number = 1,
-    per_page: number = 12,
-    filtering_conditions: WeaponFilteringConditions = { weapon_type: '', attack_type: '' },
+    payload: Partial<WeaponsFetchRequest> = {
+      ...weaponsFetchRequestPayload.value,
+    },
   ) => {
     try {
       resetWeaponsListResponseState()
       weaponsListResponseState.value.is_loading = true
       const requestUrl = new URL(`${BASE_URL}/weapons`)
-      requestUrl.searchParams.set('page', String(page))
-      requestUrl.searchParams.set('per_page', String(per_page))
-      requestUrl.searchParams.set('weapon_type', filtering_conditions.weapon_type)
-      requestUrl.searchParams.set('attack_type', filtering_conditions.attack_type)
+
+      const appendParam = (key: string, value?: string | string[]) => {
+        if (!value) return
+        const values = Array.isArray(value) ? value : [value]
+        const paramName = values.length > 1 ? `${key}[]` : key
+        values.forEach((item) => requestUrl.searchParams.append(paramName, item))
+      }
+
+      requestUrl.searchParams.set('page', String(payload.page))
+      requestUrl.searchParams.set('per_page', String(payload.per_page))
+      appendParam('weapon_type', payload.weapon_type)
+      appendParam('attack_type', payload.attack_type)
 
       const response = await fetch(requestUrl)
 
@@ -59,10 +82,65 @@ export function useWeapon() {
     }
   }
 
+  // ===========================
+  // Fetch categories list
+  // ===========================
+  const weaponCategoriesListResponse = ref<WeaponCategories>({
+    weapon_types: [],
+    attack_types: [],
+  })
+
+  const weaponCategriesListResponseState = ref<FetchState>({
+    is_loading: false,
+    has_error: false,
+    error_message: '',
+  })
+
+  const resetWeaponsCategoriesListResponseState = () => {
+    weaponCategriesListResponseState.value = {
+      is_loading: false,
+      has_error: false,
+      error_message: '',
+    }
+  }
+
+  const fetchWeaponsCategoriesList = async () => {
+    try {
+      resetWeaponsCategoriesListResponseState()
+      weaponCategriesListResponseState.value.is_loading = true
+      const requestUrl = new URL(`${BASE_URL}/categories`)
+
+      const response = await fetch(requestUrl)
+
+      if (!response.ok) {
+        throw new Error(
+          `Unable to fetch weapon categories. (${response.status} ${response.statusText})`,
+        )
+      }
+      weaponCategoriesListResponse.value = await response.json()
+    } catch (error) {
+      weaponCategriesListResponseState.value.has_error = true
+      weaponCategriesListResponseState.value.error_message =
+        error instanceof Error
+          ? error.message
+          : 'Unknown error occurred while fetching weapon categories.'
+      throw error
+    } finally {
+      weaponCategriesListResponseState.value.is_loading = false
+    }
+  }
+
   return {
     // Fetch Weapons List
     weaponsListReponse,
     weaponsListResponseState,
+    weaponsFetchRequestPayload,
     fetchWeaponsList,
+
+    // Fetch weapons categories list
+    weaponCategoriesListResponse,
+    weaponCategriesListResponseState,
+    resetWeaponsCategoriesListResponseState,
+    fetchWeaponsCategoriesList,
   }
 }

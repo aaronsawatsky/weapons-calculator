@@ -48,3 +48,15 @@ export interface WeaponFilteringConditions {
   weapon_type: string
   attack_type: string
 }
+
+export interface WeaponsFetchRequest {
+  page: number
+  per_page: number
+  weapon_type: string[]
+  attack_type: string[]
+}
+
+export interface WeaponCategories {
+  weapon_types: string[]
+  attack_types: string[]
+}

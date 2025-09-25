@@ -1,5 +1,16 @@
 @import 'tailwindcss';
 
+@theme {
+  --color-darkBg: #1a1a1a;
+  --color-secondaryBg: #262626;
+  --color-text-base: #f0f0f0;
+  --color-text-secondary: #b0b0b0;
+  --color-border-base: #2f2f2f;
+  --color-accent: #d47b2d;
+  --color-alert: #c0392b;
+  --color-success: #27ae60;
+}
+
 @font-face {
   font-family: 'Optimus Princeps';
   src: url('@/assets/OptimusPrinceps.ttf') format('truetype');
@@ -21,9 +32,13 @@ body,
 #app {
   height: 100%;
   margin: 0;
-  background-color: #1c1c1c;
+  background-color: #1a1a1a;
   font-family: 'Optimus Princeps', ui-sans-serif, system-ui, sans-serif;
-  color: white;
+  color: #f0f0f0;
+}
+
+button {
+  cursor: pointer;
 }
 
 @layer base {
