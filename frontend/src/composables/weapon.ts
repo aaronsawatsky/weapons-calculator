@@ -16,6 +16,7 @@ export function useWeapon() {
     per_page: 12,
     weapon_type: [],
     attack_type: [],
+    keyword: '',
   })
 
   const weaponsListReponse = ref<WeaponsListResponse>({
@@ -63,6 +64,7 @@ export function useWeapon() {
 
       requestUrl.searchParams.set('page', String(payload.page))
       requestUrl.searchParams.set('per_page', String(payload.per_page))
+      requestUrl.searchParams.set('keyword', String(payload.keyword))
       appendParam('weapon_type', payload.weapon_type)
       appendParam('attack_type', payload.attack_type)
 

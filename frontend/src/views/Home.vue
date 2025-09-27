@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useWeapon } from '@/composables/weapon'
+import { useSearchModalStore } from '@/stores/searchModal'
+import { storeToRefs } from 'pinia'
 import WeaponsGrid from '@/components/common/WeaponsGrid.vue'
 import PaginationButtons from '@/components/common/PaginationButtons.vue'
 import CategoryButton from '@/components/common/CategoryButton.vue'
@@ -16,7 +18,11 @@ const {
   fetchWeaponsCategoriesList,
 } = useWeapon()
 
-const isShowSidePanel = ref(true)
+const searchModalStore = useSearchModalStore()
+
+const { keyword, searchModalWeaponsListResponse } = storeToRefs(searchModalStore)
+
+const isShowSidePanel = ref<boolean>(false)
 
 const handleSkipToPage = async (page: number | null) => {
   if (page) {
@@ -47,6 +53,14 @@ watch(
   { deep: true },
 )
 
+watch(keyword, async () => {
+  if (keyword.value.length) {
+    weaponsFetchRequestPayload.value.keyword = keyword.value
+    await fetchWeaponsList(weaponsFetchRequestPayload.value)
+    searchModalWeaponsListResponse.value = weaponsListReponse.value
+  }
+})
+
 onMounted(async () => {
   await fetchWeaponsCategoriesList()
 })
@@ -57,7 +71,7 @@ onMounted(async () => {
     v-model:is-show-side-panel="isShowSidePanel"
     :weapon-categories-list="weaponCategoriesListResponse"
   />
-  <div class="p-10 mx-auto max-w-[1000px] flex flex-col gap-4 w-full">
+  <div class="mx-auto max-w-[1000px] flex flex-col gap-4 w-full">
     <div class="flex flex-wrap gap-4">
       <template v-for="category in weaponCategoriesListResponse">
         <template v-for="item in category.categories">

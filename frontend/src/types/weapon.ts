@@ -56,6 +56,7 @@ export interface WeaponsFetchRequest {
   per_page: number
   weapon_type: string[]
   attack_type: string[]
+  keyword: string
 }
 
 export interface WeaponCategoryItem {

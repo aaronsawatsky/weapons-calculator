@@ -13,6 +13,14 @@ class WeaponController extends Controller
         
         $query = Weapon::query();
 
+        if ($keyword = $request->string('keyword')->trim()->value()) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', "%{$keyword}%")
+                ->orWhere('weapon_type', 'like', "%{$keyword}%")
+                ->orWhere('attack_type', 'like', "%{$keyword}%");
+            });
+        }
+
         $weaponTypes = array_filter(Arr::wrap($request->input('weapon_type')));
         if (!empty($weaponTypes)) {
             $query->whereIn('weapon_type', $weaponTypes);

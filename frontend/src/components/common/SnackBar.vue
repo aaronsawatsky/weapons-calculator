@@ -49,10 +49,13 @@ watch(
 </script>
 
 <template>
-  <Teleport to="#snackbar-block">
+  <div
+    class="w-full md:w-fit p-4 fixed bottom-0 transition-all duration-300 ease-in-out md:max-w-xs md:min-w-[400px]"
+    :class="isShow ? '' : '-translate-x-[calc(100%+1rem)]'"
+  >
     <div
-      class="rounded px-4 py-2 flex items-center shadow/30 justify-between w-full md:max-w-xs transition-all duration-300 ease-in-out gap-4"
-      :class="[backgroundColor, isShow ? '' : '-translate-x-[calc(100%+1rem)]']"
+      class="rounded px-4 py-2 flex items-center shadow/30 justify-between w-full gap-4"
+      :class="backgroundColor"
     >
       <div class="flex gap-2 items-center">
         <material-icon :icon-name="icon" />
@@ -66,5 +69,5 @@ watch(
         <material-icon icon-name="close" />
       </button>
     </div>
-  </Teleport>
+  </div>
 </template>

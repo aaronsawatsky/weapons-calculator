@@ -15,7 +15,7 @@ defineProps<Props>()
     <div class="flex flex-col gap-2">
       <p class="text-left leading-none text-2xl font-bold truncate">{{ weapon.name }}</p>
       <div class="flex items-center gap-4 w-fit italic text-sm">
-        <span class="leading-none">{{ weapon.weapon_type }}</span>
+        <span class="leading-none">{{ weapon.weapon_type.replace('-', ' ') }}</span>
         <div class="self-stretch w-px bg-white" />
         <span class="leading-none">{{ weapon.attack_type }}</span>
       </div>

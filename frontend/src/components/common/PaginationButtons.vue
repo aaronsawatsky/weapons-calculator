@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import MaterialIcon from './MaterialIcon.vue'
-import SnackBar from './SnackBar.vue'
 import type { SnackbarState } from '@/types/types'
+import { useSnackbarStore } from '@/stores/snackbar'
 
 interface Props {
   has_next_page: boolean
@@ -19,17 +19,15 @@ const emits = defineEmits<Emits>()
 
 const props = defineProps<Props>()
 
-const skipToPageValue = ref<number | null>(null)
+const snackbarStore = useSnackbarStore()
 
-const snackbar = ref<SnackbarState>({ isShow: false, message: '', messageType: 'normal' })
+const skipToPageValue = ref<number | null>(null)
 
 const handleSkipToPage = (page: number | null) => {
   if (page && (page < 1 || page > props.total_pages)) {
-    snackbar.value = {
-      isShow: true,
-      message: 'Page not found',
-      messageType: 'warning',
-    }
+    snackbarStore.isShow = true
+    snackbarStore.text = 'Page not found'
+    snackbarStore.messageType = 'warning'
     return
   }
   emits('click:skip-to-page', page)
@@ -80,11 +78,6 @@ const paginationButtons = computed<PaginationItem[]>(() => {
 </script>
 
 <template>
-  <snack-bar
-    v-model:is-show="snackbar.isShow"
-    :message-type="snackbar.messageType"
-    :text="snackbar.message"
-  />
   <div class="w-full flex items-center gap-4 justify-end">
     <div class="flex items-center gap-2">
       <button
