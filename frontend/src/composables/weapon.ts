@@ -3,7 +3,7 @@ import type {
   WeaponsListResponse,
   FetchState,
   WeaponsFetchRequest,
-  WeaponCategories,
+  WeaponCategory,
 } from '@/types/types'
 import { BASE_URL } from '@/const/url/url'
 
@@ -85,10 +85,10 @@ export function useWeapon() {
   // ===========================
   // Fetch categories list
   // ===========================
-  const weaponCategoriesListResponse = ref<WeaponCategories>({
-    weapon_types: [],
-    attack_types: [],
-  })
+  const weaponCategoriesListResponse = ref<WeaponCategory[]>([
+    { key: 'weapon_types', label: 'Weapon Types', categories: [] },
+    { key: 'attack_types', label: 'Attack Types', categories: [] },
+  ])
 
   const weaponCategriesListResponseState = ref<FetchState>({
     is_loading: false,
@@ -117,7 +117,25 @@ export function useWeapon() {
           `Unable to fetch weapon categories. (${response.status} ${response.statusText})`,
         )
       }
-      weaponCategoriesListResponse.value = await response.json()
+      const data = await response.json()
+      weaponCategoriesListResponse.value = [
+        {
+          key: 'weapon_types',
+          label: 'Weapon Types',
+          categories: data.weapon_types.map((name: string) => ({
+            type: name,
+            is_selected: false,
+          })),
+        },
+        {
+          key: 'attack_types',
+          label: 'Attack Types',
+          categories: data.attack_types.map((name: string) => ({
+            type: name,
+            is_selected: false,
+          })),
+        },
+      ]
     } catch (error) {
       weaponCategriesListResponseState.value.has_error = true
       weaponCategriesListResponseState.value.error_message =

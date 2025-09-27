@@ -2,6 +2,8 @@ import type { PaginatedMetaData } from '@/types/types'
 
 export type ScalingType = 'S' | 'A' | 'B' | 'C' | 'D' | 'E' | null
 
+export type CategoryGroupKey = 'weapon_types' | 'attack_types'
+
 export interface WeaponsListResponse {
   data: Weapon[]
   meta: PaginatedMetaData
@@ -56,7 +58,13 @@ export interface WeaponsFetchRequest {
   attack_type: string[]
 }
 
-export interface WeaponCategories {
-  weapon_types: string[]
-  attack_types: string[]
+export interface WeaponCategoryItem {
+  type: string
+  is_selected: boolean
+}
+
+export interface WeaponCategory {
+  key: CategoryGroupKey
+  label: string
+  categories: WeaponCategoryItem[]
 }
